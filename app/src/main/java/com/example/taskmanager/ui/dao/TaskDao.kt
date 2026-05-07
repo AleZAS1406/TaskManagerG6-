@@ -1,10 +1,12 @@
 package com.example.taskmanager.ui.dao
 
+import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.taskmanager.ui.model.Task
 
+@Dao
 interface TaskDao {
 
     @Insert
@@ -24,5 +26,4 @@ interface TaskDao {
 
     @Update
     suspend fun updateTask(task: Task)
-
 }

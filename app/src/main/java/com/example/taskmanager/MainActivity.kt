@@ -7,41 +7,38 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.room.Room
+import com.example.taskmanager.ui.dao.TaskDatabase
+import com.example.taskmanager.ui.navigation.AppNavigation
+import com.example.taskmanager.ui.repository.TaskRepository
 import com.example.taskmanager.ui.theme.TaskManagerTheme
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var database: TaskDatabase
+    private lateinit var repository: TaskRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        database = Room.databaseBuilder(
+            applicationContext,
+            TaskDatabase::class.java,
+            "task_database"
+        ).build()
+        repository = TaskRepository(database.taskDao())
+
         enableEdgeToEdge()
         setContent {
             TaskManagerTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    AppNavigation(
+                        repository = repository,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TaskManagerTheme {
-        Greeting("Android")
     }
 }
